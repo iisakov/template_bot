@@ -1,6 +1,18 @@
 package config
 
-import tg "github.com/iisakov/telegram-bot-api"
+import (
+	"party_bot/model"
+
+	tg "github.com/iisakov/telegram-bot-api"
+)
+
+var TOKEN string
+var PUBLIC_CHAT int64
+var MODERATOR_CHAT int64
+
+var ADMINS, MODERATORS, CUSTOMERS model.Users
+
+var PAIRS model.Pairs
 
 var BotStage = tg.NewStages(
 	0,
