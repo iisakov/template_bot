@@ -1,0 +1,63 @@
+[
+	{
+		"pair": [
+			{
+				"userId": 1,
+				"userChatId": 1,
+				"userLogin": "lTest1",
+				"userAlias": "aTest1",
+				"answers": [
+					"aTest1.2",
+					"aTest2.1",
+					"aTest3.3"
+				],
+				"gender": 1,
+				"lastMessageId": 1
+			},
+			{
+				"userId": 4,
+				"userChatId": 4,
+				"userLogin": "lTest4",
+				"userAlias": "aTest4",
+				"answers": [
+					"aTest2.2",
+					"aTest1.2"
+				],
+				"gender": 0,
+				"lastMessageId": 4
+			}
+		],
+		"numMatches": 2
+	},
+	{
+		"pair": [
+			{
+				"userId": 2,
+				"userChatId": 2,
+				"userLogin": "lTest2",
+				"userAlias": "aTest2",
+				"answers": [
+					"aTest2.2",
+					"aTest1.2",
+					"aTest3.4"
+				],
+				"gender": 0,
+				"lastMessageId": 2
+			},
+			{
+				"userId": 3,
+				"userChatId": 3,
+				"userLogin": "lTest3",
+				"userAlias": "aTest3",
+				"answers": [
+					"aTest3.2",
+					"aTest1.1",
+					"aTest2.4"
+				],
+				"gender": 1,
+				"lastMessageId": 3
+			}
+		],
+		"numMatches": 4
+	}
+]
