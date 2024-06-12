@@ -1,6 +1,9 @@
 package model
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Pairs []Pair
 
@@ -40,6 +43,21 @@ func (ps Pairs) FindPartner(login string) (*User, bool) {
 	}
 	return nil, false
 }
+
+func (ps Pairs) NumPair() (result string) {
+	for i, p := range ps {
+		result += fmt.Sprintf("num: %d\n pair: %s", i+1, p)
+	}
+	return
+}
+
+// func (ps Pairs) CountPairs() (result map[int]Users) {
+// 	result = make(map[int]Users)
+// 	for i, p := range ps {
+// 		result[i] = Users{p.Pair[0], p.Pair[0]}
+// 	}
+// 	return
+// }
 
 // pair is Backupable
 func (ps Pairs) CreateBackup() {}

@@ -41,8 +41,9 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 			msg = tg.NewMessage(um.From.ID, "Вопросы со свободным ответом появятся позже, следите за обновлениями.")
 			DeleteMessegeByIds(b, cId, stl.MakeUIntSlice(mId-50, mId))
 		case 3:
-			if u, ok := config.PAIRS.FindPartner(um.From.UserName); ok {
-				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Сообщение от %s:\n%s", u.Alias, um.Text))
+			if up, ok := config.PAIRS.FindPartner(um.From.UserName); ok {
+				u, _ = config.PAIRS.FindUser(um.From.UserName)
+				msg = tg.NewMessage(up.UserChat_id, fmt.Sprintf("Сообщение от %s:\n%s", u.Alias, um.Text))
 			}
 
 		}
@@ -72,9 +73,22 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 
 		case "Показать пары":
 			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.String())
-		case "Распредилить пары":
+		case "Распределить пары":
 			config.PAIRS = config.CUSTOMERS.DistributionPairs()
 			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.String())
+		case "Номер пар":
+			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.NumPair())
+		case "Отправить номер столика":
+			recipients := ""
+			for i, p := range config.PAIRS {
+				msg = tg.NewMessage(p.Pair[0].UserChat_id, fmt.Sprintf("Пересядь, за столик - %d", i+1))
+				b.Send(msg)
+				msg = tg.NewMessage(p.Pair[1].UserChat_id, fmt.Sprintf("Пересядь, за столик - %d", i+1))
+				b.Send(msg)
+				recipients += fmt.Sprintf("%s (%s)\n", p.Pair[0].Login, p.Pair[0].Alias)
+				recipients += fmt.Sprintf("%s (%s)\n", p.Pair[1].Login, p.Pair[1].Alias)
+			}
+			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Отправил столики.\n\nПо списку:\n%s", recipients))
 
 		default:
 			msg = tg.NewMessage(um.From.ID, "Что-то пошло не так")
@@ -101,6 +115,7 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 					)
 					var msg tg.MessageConfig = tg.NewMessage(u.UserChat_id, qText)
 					msg.ReplyMarkup, _ = model.RenderInlineMarkup(b, config.QUESTIONS.GetQuestion())
+					DeleteMessegeByIds(b, u.UserChat_id, stl.MakeUIntSlice(u.LastMessageId-50, u.LastMessageId))
 					b.Send(msg)
 					recipients += fmt.Sprintf("%s (%s)\n", u.Login, u.Alias)
 				}
@@ -121,6 +136,7 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 			if len(splitMessage) != 3 {
 				var msg tg.MessageConfig = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Сообщение %s должно состоять из трёх частей, разделённых ' : '.\nНапример: userName : Задача : pair", um.Text))
 				b.Send(msg)
+				break
 			}
 			if splitMessage[2] == "pair" {
 				if p, ok := config.PAIRS.FindPair(splitMessage[0]); ok {
@@ -139,10 +155,9 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 				}
 			}
 
-			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Отправил задание:\n%s\n\nПо списку:\n%s", config.QUESTIONS.GetQuestion().Text, recipients))
+			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Отправил задание:\n%s\n\nПо списку:\n%s", splitMessage[1], recipients))
 		}
 		u.SetLastMessageId(mId)
-		DeleteMessegeByIds(b, cId, stl.MakeUIntSlice(mId-50, mId))
 	}
 	b.Send(msg)
 }

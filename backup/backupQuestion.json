@@ -18,7 +18,13 @@
 		},
 		{
 			"text": "qTest2",
-			"answers": [],
+			"answers": [
+				"aTest12.1",
+				"aTest2.2",
+				"aTest2.3",
+				"aTest2.4",
+				"aTest2.5"
+			],
 			"options": [
 				"oTest2.1",
 				"oTest2.2"
@@ -36,11 +42,41 @@
 		},
 		{
 			"text": "qTest4",
+			"answers": [
+				"aTest4.1",
+				"aTest4.2",
+				"aTest4.3",
+				"aTest4.4",
+				"aTest4.5"
+			],
+			"options": [
+				"onlyOne"
+			]
+		},
+		{
+			"text": "qTest5",
+			"answers": [
+				"aTest5.1",
+				"aTest5.2",
+				"aTest5.3",
+				"aTest5.4",
+				"aTest5.5"
+			],
+			"options": [
+				"onlyOne"
+			]
+		},
+		{
+			"text": "qTest6",
 			"answers": [],
 			"options": [
-				"oTest3.1"
+				"aTest6.1",
+				"aTest6.2",
+				"aTest6.3",
+				"aTest6.4",
+				"aTest6.5"
 			]
 		}
 	],
-	"currentQuestionNum": 2
+	"currentQuestionNum": 4
 }
