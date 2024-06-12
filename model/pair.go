@@ -15,12 +15,12 @@ func NewPair(us [2]User, nm int) Pair {
 
 func (p Pair) String() string {
 	return fmt.Sprintf(
-		"pair:\n %s\nnumMatches: %d",
-		fmt.Sprintf("user1: %s:\n user2: %s",
+		"pair (numMatches: %d):\n %s",
+		p.NumMatches,
+		fmt.Sprintf("user1: %s:\n\n user2: %s",
 			p.Pair[0],
 			p.Pair[1],
 		),
-		p.NumMatches,
 	)
 }
 

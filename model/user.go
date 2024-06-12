@@ -19,20 +19,21 @@ type User struct {
 
 func NewUser(m tg.Message) User {
 	return User{UserId: m.From.ID,
-		UserChat_id: m.Chat.ID,
-		Login:       m.From.UserName,
-		Alias:       m.Text,
-		Gender:      -1}
+		UserChat_id:   m.Chat.ID,
+		Login:         m.From.UserName,
+		Alias:         m.Text,
+		Gender:        -1,
+		LastMessageId: m.MessageID}
 }
 
 func (u User) String() string {
 	return fmt.Sprintf(
-		"id: %d, chatId: %d, login: %s, alias: %s, answers: %s, gender: %s, lastMessageId: %d",
+		"id: %d\nchatId: %d\nlogin: %s\nalias: %s\nanswers:\n %s\ngender: %s\nlastMessageId: %d",
 		u.UserId,
 		u.UserChat_id,
 		u.Login,
 		u.Alias,
-		strings.Join(u.Answers, ", "),
+		strings.Join(u.Answers, "\n "),
 		u.getGenderAsString(),
 		u.LastMessageId,
 	)
@@ -47,4 +48,9 @@ func (u User) getGenderAsString() string {
 	default:
 		return "unexpect"
 	}
+}
+
+func (u *User) SetLastMessageId(messageid int) bool {
+	u.LastMessageId = messageid
+	return true
 }

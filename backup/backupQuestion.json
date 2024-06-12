@@ -6,7 +6,11 @@
 				"aTest1.1",
 				"aTest1.2",
 				"aTest1.3",
-				"aTest1.4"
+				"aTest1.4",
+				"aTest1.5",
+				"aTest1.6",
+				"aTest1.7",
+				"aTest1.8"
 			],
 			"options": [
 				"oTest1.1"
@@ -14,12 +18,7 @@
 		},
 		{
 			"text": "qTest2",
-			"answers": [
-				"aTest2.1",
-				"aTest2.2",
-				"aTest2.3",
-				"aTest2.4"
-			],
+			"answers": [],
 			"options": [
 				"oTest2.1",
 				"oTest2.2"
@@ -28,12 +27,12 @@
 		{
 			"text": "qTest3",
 			"answers": [
-				"aTest3.1",
-				"aTest3.2",
-				"aTest3.3",
-				"aTest3.4"
+				"Юноша",
+				"Девушка"
 			],
-			"options": []
+			"options": [
+				"gender"
+			]
 		},
 		{
 			"text": "qTest4",
@@ -43,5 +42,5 @@
 			]
 		}
 	],
-	"currentQuestionNum": 1
+	"currentQuestionNum": 2
 }

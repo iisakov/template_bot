@@ -12,7 +12,7 @@ func (ps Pairs) unpack() (result []string) {
 }
 
 func (ps Pairs) String() string {
-	return strings.Join(ps.unpack(), "\n")
+	return strings.Join(ps.unpack(), "\n\n+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n\n")
 }
 
 func (ps Pairs) FindUser(login string) (*User, bool) {

@@ -2,62 +2,34 @@
 	{
 		"pair": [
 			{
-				"userId": 1,
-				"userChatId": 1,
-				"userLogin": "lTest1",
-				"userAlias": "aTest1",
+				"userId": 1085265138,
+				"userChatId": 1085265138,
+				"userLogin": "iisakovArtisan",
+				"userAlias": "!!!",
 				"answers": [
-					"aTest1.2",
-					"aTest2.1",
-					"aTest3.3"
-				],
-				"gender": 1,
-				"lastMessageId": 1
-			},
-			{
-				"userId": 4,
-				"userChatId": 4,
-				"userLogin": "lTest4",
-				"userAlias": "aTest4",
-				"answers": [
-					"aTest2.2",
-					"aTest1.2"
-				],
-				"gender": 0,
-				"lastMessageId": 4
-			}
-		],
-		"numMatches": 2
-	},
-	{
-		"pair": [
-			{
-				"userId": 2,
-				"userChatId": 2,
-				"userLogin": "lTest2",
-				"userAlias": "aTest2",
-				"answers": [
-					"aTest2.2",
-					"aTest1.2",
+					"aTest3.2",
+					"aTest3.1",
+					"aTest3.4",
 					"aTest3.4"
 				],
 				"gender": 0,
-				"lastMessageId": 2
+				"lastMessageId": 1260
 			},
 			{
-				"userId": 3,
-				"userChatId": 3,
-				"userLogin": "lTest3",
-				"userAlias": "aTest3",
+				"userId": 1085265138,
+				"userChatId": 1085265138,
+				"userLogin": "iisakovArtisan",
+				"userAlias": "???",
 				"answers": [
 					"aTest3.2",
-					"aTest1.1",
-					"aTest2.4"
+					"aTest3.1",
+					"aTest3.4",
+					"aTest3.4"
 				],
 				"gender": 1,
-				"lastMessageId": 3
+				"lastMessageId": 1260
 			}
 		],
-		"numMatches": 4
+		"numMatches": 6
 	}
 ]

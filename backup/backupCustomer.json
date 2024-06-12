@@ -1,0 +1,44 @@
+[
+	{
+		"userId": 1085265138,
+		"userChatId": 1085265138,
+		"userLogin": "iisakovArtisan",
+		"userAlias": "фыв",
+		"answers": [
+			"aTest3.2",
+			"aTest3.1",
+			"aTest3.4",
+			"aTest3.4"
+		],
+		"gender": 1,
+		"lastMessageId": 1260
+	},
+	{
+		"userId": 1085265138,
+		"userChatId": 1085265138,
+		"userLogin": "iisakovArtisan",
+		"userAlias": "aksjfh",
+		"answers": [
+			"aTest3.2",
+			"aTest3.1",
+			"aTest3.4",
+			"aTest3.4"
+		],
+		"gender": 1,
+		"lastMessageId": 1260
+	},
+	{
+		"userId": 1085265138,
+		"userChatId": 1085265138,
+		"userLogin": "iisakovArtisan",
+		"userAlias": "asadgsd",
+		"answers": [
+			"aTest3.2",
+			"aTest3.1",
+			"aTest3.4",
+			"aTest3.4"
+		],
+		"gender": 0,
+		"lastMessageId": 1260
+	}
+]

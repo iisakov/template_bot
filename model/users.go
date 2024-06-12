@@ -3,6 +3,8 @@ package model
 import (
 	"party_bot/stl"
 	"strings"
+
+	tg "github.com/iisakov/telegram-bot-api"
 )
 
 type Users []User
@@ -15,7 +17,13 @@ func (us Users) unpack() (result []string) {
 }
 
 func (us Users) String() string {
-	return strings.Join(us.unpack(), "\n")
+	return strings.Join(us.unpack(), "\n\n")
+}
+
+func (us *Users) AddUser(m tg.Message) User {
+	u := NewUser(m)
+	*us = append(*us, u)
+	return u
 }
 
 func (us Users) findUserIndex(login string) (int, bool) {
@@ -42,6 +50,15 @@ func (us Users) SetGender(login string, gender int) bool {
 		return false
 	}
 	us[i].Gender = gender
+	return true
+}
+
+func (us Users) SetLastMessageId(login string, messageId int) bool {
+	i, ok := us.findUserIndex(login)
+	if !ok {
+		return false
+	}
+	us[i].SetLastMessageId(messageId)
 	return true
 }
 
