@@ -3,9 +3,11 @@ package tgstl
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"party_bot/stl"
 
 	tg "github.com/iisakov/telegram-bot-api"
 )
@@ -55,4 +57,13 @@ func DeleteMessegeByIds(b *tg.BotAPI, chat_id int64, message_ids []int) (result 
 	result = string(bodyBytes)
 
 	return
+}
+
+func DeleteAllMessages(b *tg.BotAPI, chat_id int64, message_id int) {
+	result, err := DeleteMessegeByIds(b, chat_id, stl.MakeUIntSlice(message_id-message_id%100, message_id))
+	fmt.Println(result, err, message_id-message_id%100, message_id)
+	for i := int(message_id / 100); i > int(message_id/100)-3; i-- {
+		result, err = DeleteMessegeByIds(b, chat_id, stl.MakeUIntSlice(i*100-99, i*100))
+		fmt.Println(result, err, i*100-99, i*100)
+	}
 }

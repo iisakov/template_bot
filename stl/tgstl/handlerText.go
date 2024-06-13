@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"party_bot/config"
 	"party_bot/model"
-	"party_bot/stl"
 	"strings"
 
 	tg "github.com/iisakov/telegram-bot-api"
 )
 
 func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
-	var msg tg.Chattable
+	var msg tg.MessageConfig
 	var cId int64 = um.From.ID
-	var mId int = um.MessageID
+	config.LMId = um.MessageID
+	var r string
+	var err error
 
 	if u, ok := config.MODERATORS.FindUser(um.From.UserName); !ok { // Если сообщение пришло НЕ от модератора
 		switch s.CurrentStageNum {
@@ -24,9 +25,9 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 			} else { // Сообщение не совпадает с паролем
 				msg = tg.NewMessage(um.From.ID, "Привет. Нужен пароль. Его знает админ. Спроси у него.")
 			}
-			DeleteMessegeByIds(b, cId, stl.MakeUIntSlice(mId-50, mId))
-		case 1:
-			if u, ok := config.CUSTOMERS.FindUser(um.From.UserName); !ok {
+			DeleteAllMessages(b, cId, int(config.LMId))
+		case 1: // Регистрация
+			if u, ok := config.CUSTOMERS.FindUser(um.From.UserName); !ok { // Ползователь ещё не зарегистрирован
 				u := config.CUSTOMERS.AddUser(um)
 				config.CUSTOMERS.UpdateAlias(u.Login, um.Text)
 				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Привет. Теперь твои сообщения будут подписаны %s. У тебя есть пара минтут на то чтобы изменить псевдоним.", u.Alias))
@@ -34,50 +35,52 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 				config.CUSTOMERS.UpdateAlias(u.Login, um.Text)
 				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Изменили твой псевдоним. Теперь твои сообщения будут подписаны %s. У тебя есть пара минтут на то чтобы изменить псевдоним.", u.Alias))
 			}
-			DeleteMessegeByIds(b, cId, stl.MakeUIntSlice(mId-50, mId))
-		case 2:
+			DeleteAllMessages(b, cId, int(config.LMId))
+		case 2: // Ответы на вопросы
 			fallthrough
-		case 4:
+		case 4: // Ответы на вопросы
 			msg = tg.NewMessage(um.From.ID, "Вопросы со свободным ответом появятся позже, следите за обновлениями.")
-			DeleteMessegeByIds(b, cId, stl.MakeUIntSlice(mId-50, mId))
-		case 3:
+			DeleteAllMessages(b, cId, int(config.LMId))
+		case 3: // Общение в парах
 			if up, ok := config.PAIRS.FindPartner(um.From.UserName); ok {
 				u, _ = config.PAIRS.FindUser(um.From.UserName)
 				msg = tg.NewMessage(up.UserChat_id, fmt.Sprintf("Сообщение от %s:\n%s", u.Alias, um.Text))
 			}
-
 		}
+		fmt.Println(r, err)
 
 	} else { // Если сообщение пришло от модератора
 		// Проверяем всегда
 		switch um.Text {
 		case "Текущий этап":
-			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
+			msg = tg.NewMessage(cId, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
 
 		case "Следующий этап":
 			if s.Up() {
-				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Перешёл на следующий этап: %s", s.Value[s.CurrentStageNum].Name))
+				msg = tg.NewMessage(cId, fmt.Sprintf("Перешёл на следующий этап: %s", s.Value[s.CurrentStageNum].Name))
 			} else {
-				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
+				msg = tg.NewMessage(cId, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
 			}
+			msg.ReplyMarkup, _ = model.RenderKeyboardMarkup(b, config.COMANDS.GetComands(s.CurrentStageNum))
 
 		case "Предыдущий этап":
 			if s.Down() {
-				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Перешёл на Предыдущий этап: %s", s.Value[s.CurrentStageNum].Name))
+				msg = tg.NewMessage(cId, fmt.Sprintf("Перешёл на Предыдущий этап: %s", s.Value[s.CurrentStageNum].Name))
 			} else {
-				msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
+				msg = tg.NewMessage(cId, fmt.Sprintf("Этап: %s", s.Value[s.CurrentStageNum].Name))
 			}
+			msg.ReplyMarkup, _ = model.RenderKeyboardMarkup(b, config.COMANDS.GetComands(s.CurrentStageNum))
 
 		case "Показать пользователей":
-			msg = tg.NewMessage(u.UserChat_id, config.CUSTOMERS.String())
+			msg = tg.NewMessage(cId, config.CUSTOMERS.String())
 
 		case "Показать пары":
-			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.String())
+			msg = tg.NewMessage(cId, config.PAIRS.String())
 		case "Распределить пары":
 			config.PAIRS = config.CUSTOMERS.DistributionPairs()
-			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.String())
+			msg = tg.NewMessage(cId, config.PAIRS.String())
 		case "Номер пар":
-			msg = tg.NewMessage(u.UserChat_id, config.PAIRS.NumPair())
+			msg = tg.NewMessage(cId, config.PAIRS.NumPair())
 		case "Отправить номер столика":
 			recipients := ""
 			for i, p := range config.PAIRS {
@@ -88,10 +91,10 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 				recipients += fmt.Sprintf("%s (%s)\n", p.Pair[0].Login, p.Pair[0].Alias)
 				recipients += fmt.Sprintf("%s (%s)\n", p.Pair[1].Login, p.Pair[1].Alias)
 			}
-			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Отправил столики.\n\nПо списку:\n%s", recipients))
+			msg = tg.NewMessage(cId, fmt.Sprintf("Отправил столики.\n\nПо списку:\n%s", recipients))
 
 		default:
-			msg = tg.NewMessage(um.From.ID, "Что-то пошло не так")
+			msg = tg.NewMessage(cId, "Что-то пошло не так")
 		}
 
 		// Проверяем в определённые этапы
@@ -99,7 +102,8 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 		case 0: // Настройки
 			switch um.Text {
 			case "Тест":
-				msg = tg.NewMessage(u.UserChat_id, "Тестирую")
+				msg = tg.NewMessage(cId, "Тестирую")
+				msg.ReplyMarkup, _ = model.RenderKeyboardMarkup(b, config.COMANDS.GetComands(s.CurrentStageNum))
 			}
 		case 2:
 			fallthrough
@@ -113,9 +117,9 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 						config.QUESTIONS.GetQuestion().Text,
 						config.QUESTIONS.GetQuestion().GetNumberedAnswers(),
 					)
-					var msg tg.MessageConfig = tg.NewMessage(u.UserChat_id, qText)
+					msg = tg.NewMessage(u.UserChat_id, qText)
 					msg.ReplyMarkup, _ = model.RenderInlineMarkup(b, config.QUESTIONS.GetQuestion())
-					DeleteMessegeByIds(b, u.UserChat_id, stl.MakeUIntSlice(u.LastMessageId-50, u.LastMessageId))
+					DeleteAllMessages(b, cId, int(config.LMId))
 					b.Send(msg)
 					recipients += fmt.Sprintf("%s (%s)\n", u.Login, u.Alias)
 				}
@@ -157,7 +161,7 @@ func HandleMessagesText(um tg.Message, b *tg.BotAPI, s *tg.Stages) {
 
 			msg = tg.NewMessage(u.UserChat_id, fmt.Sprintf("Отправил задание:\n%s\n\nПо списку:\n%s", splitMessage[1], recipients))
 		}
-		u.SetLastMessageId(mId)
+
 	}
 	b.Send(msg)
 }

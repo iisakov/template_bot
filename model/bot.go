@@ -59,3 +59,19 @@ func RenderInlineMarkup(b *tg.BotAPI, q Question) (*tg.InlineKeyboardMarkup, boo
 
 	return &keyboardMarkup, true
 }
+
+func RenderKeyboardMarkup(b *tg.BotAPI, csl ComandsList) (*tg.ReplyKeyboardMarkup, bool) {
+	var rows [][]tg.KeyboardButton
+	var row []tg.KeyboardButton
+
+	for _, r := range csl {
+		row = []tg.KeyboardButton{}
+		for _, c := range r {
+			row = append(row, tg.NewKeyboardButton(c.Text))
+		}
+		rows = append(rows, tg.NewKeyboardButtonRow(row...))
+
+	}
+	r := tg.NewReplyKeyboard(rows...)
+	return &r, true
+}

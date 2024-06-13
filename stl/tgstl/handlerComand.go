@@ -1,6 +1,7 @@
 package tgstl
 
 import (
+	"os"
 	"party_bot/config"
 	"party_bot/stl"
 
@@ -9,6 +10,11 @@ import (
 
 func HandleMessageComand(um tg.Message, b *tg.BotAPI, s tg.Stages) {
 	if u, ok := config.MODERATORS.FindUser(um.From.UserName); ok {
+		switch um.Command() {
+		case "exit":
+			os.Exit(1)
+		}
+
 		switch s.CurrentStageNum {
 		case 0: // Настройки
 			u.SetLastMessageId(um.MessageID)

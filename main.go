@@ -26,7 +26,8 @@ func init() {
 		"Moderator": &config.MODERATORS,
 		"Customer":  &config.CUSTOMERS,
 		"Admin":     &config.ADMINS,
-		"Question":  &config.QUESTIONS} {
+		"Question":  &config.QUESTIONS,
+		"Comand":    &config.COMANDS} {
 
 		model.ReadBackup(v, k)
 	}
@@ -65,7 +66,8 @@ func main() {
 			"Moderator": &config.MODERATORS,
 			"Customer":  &config.CUSTOMERS,
 			"Admin":     &config.ADMINS,
-			"Question":  &config.QUESTIONS} {
+			"Question":  &config.QUESTIONS,
+			"Comand":    &config.COMANDS} {
 
 			model.CreateBackup(&v, k)
 		}

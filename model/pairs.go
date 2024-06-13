@@ -51,14 +51,6 @@ func (ps Pairs) NumPair() (result string) {
 	return
 }
 
-// func (ps Pairs) CountPairs() (result map[int]Users) {
-// 	result = make(map[int]Users)
-// 	for i, p := range ps {
-// 		result[i] = Users{p.Pair[0], p.Pair[0]}
-// 	}
-// 	return
-// }
-
 // pair is Backupable
 func (ps Pairs) CreateBackup() {}
 func (ps Pairs) ReadBackup()   {}
